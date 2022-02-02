@@ -4,7 +4,7 @@ import subprocess as ss
 
 FLG_MASK = False
 FLG_STRB = False
-COLOR = (0,0,255)
+LINE_COLOR = (0,0,255)
 #WIDTH = 1440
 #HEIGHT = 1080
 WIDTH = 640
@@ -30,16 +30,16 @@ vid.set(cv.CAP_PROP_FRAME_HEIGHT, HEIGHT)
 vid.set(cv.CAP_PROP_BUFFERSIZE, 1)
 show_video_info(vid)
 
-ret, frame = vid.read()
-
 while True:
     ret, frame = vid.read()
 
+    # グリッド追加
     if FLG_MASK:
-        frame = cv.line(frame, (int(WIDTH/2),0), (int(WIDTH/2),HEIGHT), COLOR, thickness=2)
-        frame = cv.line(frame, (0,int(HEIGHT/2)), (WIDTH,int(HEIGHT/2)), COLOR, thickness=2)
+        frame = cv.line(frame, (int(WIDTH/2),0), (int(WIDTH/2),HEIGHT), LINE_COLOR, thickness=2)
+        frame = cv.line(frame, (0,int(HEIGHT/2)), (WIDTH,int(HEIGHT/2)), LINE_COLOR, thickness=2)
     cv.imshow('frame', frame)
 
+    # キー入力別処理
     key = cv.waitKey(1)
     if key == ord('q'):
         break
