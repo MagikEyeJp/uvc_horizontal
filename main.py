@@ -42,14 +42,14 @@ print(buffer)
 
 show_data_array(frame)
 
-mask = np.full_like(frame,0)
-mask = cv.line(mask, (int(WIDTH/2),0), (int(WIDTH/2),HEIGHT), COLOR, thickness=2)
-mask = cv.line(mask, (0,int(HEIGHT/2)), (WIDTH,int(HEIGHT/2)), COLOR, thickness=2)
-
-
 while True:
     ret, frame = vid.read()
-    cv.imshow('frame', (frame^mask) if FLG_MASK else frame )
+
+    if FLG_MASK:
+        frame = cv.line(frame, (int(WIDTH/2),0), (int(WIDTH/2),HEIGHT), COLOR, thickness=2)
+        frame = cv.line(frame, (0,int(HEIGHT/2)), (WIDTH,int(HEIGHT/2)), COLOR, thickness=2)
+    cv.imshow('frame', frame)
+#    cv.imshow('frame', (frame^mask) if FLG_MASK else frame )
 #    print(FLG_MASK)
 
     key = cv.waitKey(1)
