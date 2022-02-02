@@ -1,11 +1,22 @@
 import cv2 as cv
 import numpy as np
+import subprocess as ss
 
 FLG_MASK = False
-WIDTH = 1440
-HEIGHT = 1080
-#WIDTH = 640
-#HEIGHT = 480
+FLG_STRB = False
+COLOR = (0,0,255)
+#WIDTH = 1440
+#HEIGHT = 1080
+WIDTH = 640
+HEIGHT = 480
+
+CMD_STRB_ON = "v4l2-ctl -d 0 --set-ctrl=strobe_enable=1"
+CMD_STRB_OFF = "v4l2-ctl -d 0 --set-ctrl=strobe_enable=0"
+
+def set_strobe(state):
+    cmd = CMD_STRB_ON if state else CMD_STRB_OFF
+    ret = ss.Popen(cmd, stdout=ss.PIPE, shell=True).communicate()
+    print(cmd)
 
 def show_data_array(data):
     print("type: ", type(data))
@@ -32,8 +43,8 @@ print(buffer)
 show_data_array(frame)
 
 mask = np.full_like(frame,0)
-mask = cv.line(mask, (int(WIDTH/2),0), (int(WIDTH/2),HEIGHT), (0,0,170), thickness=2)
-mask = cv.line(mask, (0,int(HEIGHT/2)), (WIDTH,int(HEIGHT/2)), (0,0,170), thickness=2)
+mask = cv.line(mask, (int(WIDTH/2),0), (int(WIDTH/2),HEIGHT), COLOR, thickness=2)
+mask = cv.line(mask, (0,int(HEIGHT/2)), (WIDTH,int(HEIGHT/2)), COLOR, thickness=2)
 
 
 while True:
@@ -46,6 +57,9 @@ while True:
         break
     elif key == ord('m'):
         FLG_MASK = not FLG_MASK
+    elif key == ord('s'):
+        FLG_STRB = not FLG_STRB
+        set_strobe(FLG_STRB)
 
 vid.release()
 cv.destroyAllWindows()
