@@ -23,7 +23,7 @@ def show_video_info(v):
     print("height:"+str(vid.get(cv.CAP_PROP_FRAME_HEIGHT)))
     print("fps:"+str(vid.get(cv.CAP_PROP_FPS)))
     print("buffer:"+str(vid.get(cv.CAP_PROP_BUFFERSIZE)))
-    
+
 vid = cv.VideoCapture(0)
 vid.set(cv.CAP_PROP_FRAME_WIDTH, WIDTH)
 vid.set(cv.CAP_PROP_FRAME_HEIGHT, HEIGHT)
