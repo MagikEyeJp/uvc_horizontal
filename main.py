@@ -1,8 +1,11 @@
+import numpy as np
 import cv2 as cv
 import subprocess as ss
 import sys
 import os
+import datetime as dt
 
+LOG_DIR = "./log/"
 FLG_GRID = False
 FLG_STRB = False
 STRB_ON = True
@@ -24,6 +27,11 @@ def show_video_info(v):
     print("height:"+str(v.get(cv.CAP_PROP_FRAME_HEIGHT)))
     print("fps:"+str(v.get(cv.CAP_PROP_FPS)))
     print("buffer:"+str(v.get(cv.CAP_PROP_BUFFERSIZE)))
+
+def save_image(f):
+    filename = LOG_DIR+dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")+".jpg"
+    cv.imwrite(filename, frame)
+    print("image saved:"+filename)
 
 if not os.path.exists("/dev/video0"):
     print("error: video0 does not exist.")
@@ -53,6 +61,10 @@ while True:
     elif key == ord('s'):
         FLG_STRB = not FLG_STRB
         set_strobe(FLG_STRB)
+    elif key == ord('p'):
+        save_image(frame)
+        cv.imshow('frame', np.full_like(frame,255))
+        cv.waitKey(10)
 
 set_strobe(STRB_OFF)
 vid.release()
