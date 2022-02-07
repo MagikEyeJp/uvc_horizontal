@@ -1,6 +1,8 @@
 import cv2 as cv
 import numpy as np
 import subprocess as ss
+import sys
+import os
 
 FLG_MASK = False
 FLG_STRB = False
@@ -24,11 +26,15 @@ def show_video_info(v):
     print("fps:"+str(vid.get(cv.CAP_PROP_FPS)))
     print("buffer:"+str(vid.get(cv.CAP_PROP_BUFFERSIZE)))
 
+if not os.path.exists("/dev/video0"):
+    print("error: video0 does not exist.")
+    sys.exit()
+
 vid = cv.VideoCapture(0)
 vid.set(cv.CAP_PROP_FRAME_WIDTH, WIDTH)
 vid.set(cv.CAP_PROP_FRAME_HEIGHT, HEIGHT)
 vid.set(cv.CAP_PROP_BUFFERSIZE, 1)
-show_video_info(vid)
+#show_video_info(vid)
 
 while True:
     ret, frame = vid.read()
