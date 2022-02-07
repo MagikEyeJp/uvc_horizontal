@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=UVC_TEST
+Exec=/usr/bin/python3 /home/pi/work/uvc_horizontal/main.py
+
+Icon=/home//pi/work/uvc_horizontal/icon.png
+Terminal=true
+Type=Application
