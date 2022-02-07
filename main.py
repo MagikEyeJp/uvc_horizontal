@@ -5,6 +5,8 @@ import os
 
 FLG_GRID = False
 FLG_STRB = False
+STRB_ON = True
+STRB_OFF = False
 LINE_COLOR = (0,0,255)
 WIDTH = 640
 HEIGHT = 480
@@ -52,5 +54,6 @@ while True:
         FLG_STRB = not FLG_STRB
         set_strobe(FLG_STRB)
 
+set_strobe(STRB_OFF)
 vid.release()
 cv.destroyAllWindows()
