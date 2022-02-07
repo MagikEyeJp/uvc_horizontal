@@ -5,7 +5,7 @@ import sys
 import os
 import datetime as dt
 
-LOG_DIR = "./log/"
+LOG_DIR = "./saved_image/"
 FLG_GRID = False
 FLG_STRB = False
 STRB_ON = True
