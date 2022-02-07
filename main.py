@@ -29,8 +29,12 @@ def show_video_info(v):
     print("buffer:"+str(v.get(cv.CAP_PROP_BUFFERSIZE)))
 
 def save_image(f):
-    filename = LOG_DIR+dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")+".jpg"
-    cv.imwrite(filename, frame)
+    t = dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    filename = LOG_DIR+t+".jpg"
+    cv.putText(f,t,(0,20),cv.FONT_HERSHEY_SIMPLEX,0.5,(0,160,255),1,cv.LINE_AA)
+    cv.putText(f,"GAIN:"+str(vid.get(cv.CAP_PROP_GAIN)),(0,40),cv.FONT_HERSHEY_SIMPLEX,0.5,(0,160,255),1,cv.LINE_AA)
+    cv.putText(f,"EXP:"+str(vid.get(cv.CAP_PROP_EXPOSURE)),(0,60),cv.FONT_HERSHEY_SIMPLEX,0.5,(0,160,255),1,cv.LINE_AA)
+    cv.imwrite(filename, f)
     print("image saved:"+filename)
 
 if not os.path.exists("/dev/video0"):
@@ -64,7 +68,7 @@ while True:
     elif key == ord('p'):
         save_image(frame)
         cv.imshow('frame', np.full_like(frame,255))
-        cv.waitKey(10)
+        cv.waitKey(200)
 
 set_strobe(STRB_OFF)
 vid.release()
