@@ -3,7 +3,7 @@ import subprocess as ss
 import sys
 import os
 
-FLG_MASK = False
+FLG_GRID = False
 FLG_STRB = False
 LINE_COLOR = (0,0,255)
 WIDTH = 640
@@ -18,10 +18,10 @@ def set_strobe(state):
     print("strobe:"+str(state))
 
 def show_video_info(v):
-    print("width:"+str(vid.get(cv.CAP_PROP_FRAME_WIDTH)))
-    print("height:"+str(vid.get(cv.CAP_PROP_FRAME_HEIGHT)))
-    print("fps:"+str(vid.get(cv.CAP_PROP_FPS)))
-    print("buffer:"+str(vid.get(cv.CAP_PROP_BUFFERSIZE)))
+    print("width:"+str(v.get(cv.CAP_PROP_FRAME_WIDTH)))
+    print("height:"+str(v.get(cv.CAP_PROP_FRAME_HEIGHT)))
+    print("fps:"+str(v.get(cv.CAP_PROP_FPS)))
+    print("buffer:"+str(v.get(cv.CAP_PROP_BUFFERSIZE)))
 
 if not os.path.exists("/dev/video0"):
     print("error: video0 does not exist.")
@@ -37,7 +37,7 @@ while True:
     ret, frame = vid.read()
 
     # グリッド追加
-    if FLG_MASK:
+    if FLG_GRID:
         frame = cv.line(frame, (int(WIDTH/2),0), (int(WIDTH/2),HEIGHT), LINE_COLOR, thickness=2)
         frame = cv.line(frame, (0,int(HEIGHT/2)), (WIDTH,int(HEIGHT/2)), LINE_COLOR, thickness=2)
     cv.imshow('frame', frame)
@@ -46,8 +46,8 @@ while True:
     key = cv.waitKey(1)
     if key == ord('q'):
         break
-    elif key == ord('m'):
-        FLG_MASK = not FLG_MASK
+    elif key == ord('g'):
+        FLG_GRID = not FLG_GRID
     elif key == ord('s'):
         FLG_STRB = not FLG_STRB
         set_strobe(FLG_STRB)
