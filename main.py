@@ -1,5 +1,4 @@
 import cv2 as cv
-import numpy as np
 import subprocess as ss
 import sys
 import os
@@ -7,8 +6,6 @@ import os
 FLG_MASK = False
 FLG_STRB = False
 LINE_COLOR = (0,0,255)
-#WIDTH = 1440
-#HEIGHT = 1080
 WIDTH = 640
 HEIGHT = 480
 
