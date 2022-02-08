@@ -4,6 +4,7 @@ import subprocess as ss
 import sys
 import os
 import datetime as dt
+import time
 
 LOG_DIR = "/home/pi/Desktop/saved_image/"
 FLG_GRID = False
@@ -16,6 +17,9 @@ HEIGHT = 480
 
 CMD_STRB_ON = "v4l2-ctl -d 0 --set-ctrl=strobe_enable=1"
 CMD_STRB_OFF = "v4l2-ctl -d 0 --set-ctrl=strobe_enable=0"
+CMD_SET_EXPOSURE_REF = "v4l2-ctl -d 0 --set-ctrl=auto_exposure_reference=80"
+CMD_SET_EXPOSURE_AUTO = "v4l2-ctl -d 0 --set-ctrl=exposure_auto_upper_limit_us=80000"
+CMD_SET_GAIN_UPPER = "v4l2-ctl -d 0 --set-ctrl=gain_auto_upper_limit=330"
 
 def set_strobe(state):
     cmd = CMD_STRB_ON if state else CMD_STRB_OFF
@@ -39,13 +43,19 @@ def save_image(f):
 
 if not os.path.exists("/dev/video0"):
     print("error: video0 does not exist.")
+    time.sleep(2)
     sys.exit()
 
 vid = cv.VideoCapture(0)
 vid.set(cv.CAP_PROP_FRAME_WIDTH, WIDTH)
 vid.set(cv.CAP_PROP_FRAME_HEIGHT, HEIGHT)
 vid.set(cv.CAP_PROP_BUFFERSIZE, 1)
+ret, frame = vid.read()
 #show_video_info(vid)
+
+ret = ss.Popen(CMD_SET_EXPOSURE_REF, stdout=ss.PIPE, shell=True).communicate()
+ret = ss.Popen(CMD_SET_EXPOSURE_AUTO, shell=True).communicate()
+ret = ss.Popen(CMD_SET_GAIN_UPPER, stdout=ss.PIPE, shell=True).communicate()
 
 while True:
     ret, frame = vid.read()
@@ -55,6 +65,8 @@ while True:
         frame = cv.line(frame, (int(WIDTH/2),0), (int(WIDTH/2),HEIGHT), LINE_COLOR, thickness=2)
         frame = cv.line(frame, (0,int(HEIGHT/2)), (WIDTH,int(HEIGHT/2)), LINE_COLOR, thickness=2)
     cv.imshow('frame', frame)
+    print("gain:",vid.get(cv.CAP_PROP_GAIN))
+    print("expo:",vid.get(cv.CAP_PROP_EXPOSURE))
 
     # キー入力別処理
     key = cv.waitKey(1)
