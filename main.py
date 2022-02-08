@@ -1,3 +1,4 @@
+from cv2 import WINDOW_FULLSCREEN
 import numpy as np
 import cv2 as cv
 import subprocess as ss
@@ -14,6 +15,8 @@ STRB_OFF = False
 LINE_COLOR = (0,0,255)
 WIDTH = 640
 HEIGHT = 480
+ZOOM_MAX = 5
+ZOOM_REF = 1.2
 
 CMD_STRB_ON = "v4l2-ctl -d 0 --set-ctrl=strobe_enable=1"
 CMD_STRB_OFF = "v4l2-ctl -d 0 --set-ctrl=strobe_enable=0"
@@ -57,13 +60,26 @@ ret = ss.Popen(CMD_SET_EXPOSURE_REF, stdout=ss.PIPE, shell=True).communicate()
 ret = ss.Popen(CMD_SET_EXPOSURE_AUTO, shell=True).communicate()
 ret = ss.Popen(CMD_SET_GAIN_UPPER, stdout=ss.PIPE, shell=True).communicate()
 
+zoom_x = 0
+
 while True:
     ret, frame = vid.read()
+
+    # ズーム
+    if zoom_x:
+        frame = cv.resize(frame, dsize=None, fx=ZOOM_REF**zoom_x, fy=ZOOM_REF**zoom_x)
+        print(ZOOM_REF**zoom_x)
+        height,width = frame.shape[:2]
+        posx = int((height - HEIGHT)/2)
+        posy = int((width - WIDTH)/2)
+        frame = frame[posx:posx+HEIGHT,posy:posy+WIDTH]
 
     # グリッド追加
     if FLG_GRID:
         frame = cv.line(frame, (int(WIDTH/2),0), (int(WIDTH/2),HEIGHT), LINE_COLOR, thickness=2)
         frame = cv.line(frame, (0,int(HEIGHT/2)), (WIDTH,int(HEIGHT/2)), LINE_COLOR, thickness=2)
+
+    cv.namedWindow("frame", cv.WINDOW_NORMAL)
     cv.imshow('frame', frame)
     print("gain:",vid.get(cv.CAP_PROP_GAIN))
     print("expo:",vid.get(cv.CAP_PROP_EXPOSURE))
@@ -81,6 +97,12 @@ while True:
         save_image(frame)
         cv.imshow('frame', np.full_like(frame,255))
         cv.waitKey(200)
+    elif key == ord(','):
+        if zoom_x:
+            zoom_x -= 1
+    elif key == ord('.'):
+        if zoom_x < ZOOM_MAX:
+            zoom_x += 1
 
 set_strobe(STRB_OFF)
 vid.release()
