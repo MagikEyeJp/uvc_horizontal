@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from cv2 import WINDOW_FULLSCREEN
 import numpy as np
 import cv2 as cv
